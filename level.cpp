@@ -5,13 +5,14 @@
 using namespace std;
 
 enum eDir { STOP = 0, LEFT, RIGHT, UP, DOWN };
-eDir dir;
+eDir dir[2];
+
 
 
 
 void setup(const int weight, const int hight, int& x, int& y, int& fx, int& fy, int& score)
 {
-	dir = STOP; //√оворим что первоначально с нашей змейкой ничего не просиходит и она стоит на месте, до изменени€ ее движени€.
+	dir[0] = STOP; //√оворим что первоначально с нашей змейкой ничего не просиходит и она стоит на месте, до изменени€ ее движени€.
 	x = weight / 2 - 1; //ѕревоначальные координаты головы по шириные пол€.
 	y = hight / 2 - 1; //ѕервоначальные кординаты головы по высоте пол€.
 	fx = rand() % weight; //ѕревоначальные координаты фрукта по шириные пол€.
@@ -66,16 +67,20 @@ void input(int& x, int& y, bool& flag)
 		switch (_getch()) //ѕринимаем и сравниваем значение с клавиатуры.
 		{
 		case 'a':
-			dir = LEFT;
+			dir[1] = dir[0];
+			dir[0] = LEFT;
 			break;
 		case 'd':
-			dir = RIGHT;
+			dir[1] = dir[0];
+			dir[0] = RIGHT;
 			break;
 		case 's':
-			dir = DOWN;
+			dir[1] = dir[0];
+			dir[0] = DOWN;
 			break;
 		case 'w':
-			dir = UP;
+			dir[1] = dir[0];
+			dir[0] = UP;
 			break;
 		case 'x':
 			flag = false;
@@ -102,19 +107,31 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 		prevY = prev2Y;
 	}
 	//Ћогика движени€ головы.
-	switch (dir)
+	switch (dir[0])
 	{
 	case LEFT:
-		x--;
+		if (dir[1] != RIGHT)
+			x--;
+		else
+			x++;
 		break;
 	case RIGHT:
-		x++;
+		if (dir[1] != LEFT)
+			x++;
+		else
+			x--;
 		break;
 	case UP:
-		y--;
+		if (dir[1] != DOWN)
+			y--;
+		else
+			y++;
 		break;
 	case DOWN:
-		y++;
+		if (dir[1] != UP)
+			y++;
+		else
+			y--;
 		break;
 	}
 	//Ћогика поедани€ фрукта, увелиени€ очков а также длины хвоста.
