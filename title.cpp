@@ -1,6 +1,6 @@
 #include <iostream>;
 #include "title.h";
-#include "funcion.h";	
+#include "level.h";	
 
 using namespace std;
 
@@ -11,16 +11,17 @@ void menu(int& choice)
 		system("cls");
 		cout << "=========(Main menu)=========\n";
 		cout << "1. New game.\n";
-		cout << "2. Exit game.\n";
+		cout << "2. Setting.\n";
+		cout << "3. Exit game.\n";
 		cin >> choice;
-		if (choice > 0 && choice < 3)
+		if (choice > 0 && choice < 4)
 		{
 			break;
 		}
 	}
 }
 
-void game() //Функция, которая вызывается, когда пользователь начинает новую игру.
+void game(int& setting_wall) //Функция, которая вызывается, когда пользователь начинает новую игру.
 {
 	const int weight = 20; //Ширина поля
 	const int hight = 20; //Высота поля
@@ -33,7 +34,7 @@ void game() //Функция, которая вызывается, когда пользователь начинает новую игр
 	{
 		drow(weight, hight, x, y, x_fruit, y_fruit, score, ntail, tailX, tailY); //Функция которая отвечает за отображение поля, персонажа (змеи и ее головы) и фуруктов в поле.
 		input(x, y, flag); //Функция которая отвечает за ввод информации с клавиатуры, а именно в процессе игры за передвижение змейки.
-		logic(weight, hight, x, y, x_fruit, y_fruit, score, flag, ntail, tailX, tailY, size); //Функция в которой происходит вся логика игры.
+		logic(weight, hight, x, y, x_fruit, y_fruit, score, flag, ntail, tailX, tailY, size, setting_wall); //Функция в которой происходит вся логика игры.
 	}
 	delete[] tailX;
 	delete[] tailY;
@@ -42,4 +43,34 @@ void game() //Функция, которая вызывается, когда пользователь начинает новую игр
 void exit_game() //Завершение игры.
 {
 	exit(0);
+}
+
+void setting(int& wall)
+{
+	int choice;
+	bool flag = true;
+	while (flag)
+	{
+		system("cls");
+		cout << "1. Режим взаимодействия со стеной: ";
+		if (wall == 0)
+			cout << "Выход с противоположной стороны.\n";
+		else if (wall == 1)
+			cout << "Умирать от стены.\n";
+		cout << "2. Выход из настроек.\n";
+		cout << "Ввод: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			if (wall == 0)
+				wall = 1;
+			else if (wall == 1)
+				wall = 0;
+			break;
+		case 2 :
+			flag = false;
+			break;
+		}
+	}
 }

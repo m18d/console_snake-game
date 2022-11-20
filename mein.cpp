@@ -1,4 +1,4 @@
-#include "funcion.h";
+#include<iostream>
 #include "title.h";
 
 using namespace std;
@@ -6,18 +6,21 @@ using namespace std;
 
 int main()
 {
-	int choice;
+	setlocale(LC_ALL, "ru");
+	int choice, setting_wall = 0;
 	while (true)
 	{
 		menu(choice); //Вызов начального меню.
 		switch (choice)
 		{
 		case 1:
-			game(); //Запуск уровня.
+			game(setting_wall); //Запуск уровня.
 			break;
 		case 2:
-			exit_game(); //Выход и приложения.
+			setting(setting_wall);
 			break;
+		case 3:
+			exit_game(); //Выход и приложения.
 		}
 	}
 }

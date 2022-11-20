@@ -1,6 +1,6 @@
 #include<iostream>
 #include<conio.h>
-#include "funcion.h";
+#include "level.h";
 
 using namespace std;
 
@@ -89,7 +89,7 @@ void input(int& x, int& y, bool& flag)
 	}
 }
 
-void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, int& score, bool& flag, int& nTail, int*& tailX, int*& tailY, int& size)
+void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, int& score, bool& flag, int& nTail, int*& tailX, int*& tailY, int& size, int& setting_wall)
 {
 	//Логика хвоста.
 	int prevX = tailX[0];
@@ -148,18 +148,24 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 		tailY = new int[size];
 	}
 	//Логика появления змеи с другой стороны, если она дошла до стенки.
-	if (x >= weight - 1)
-		x = 0;
-	else if (x < 0)
-		x = weight - 2;
-
-	if (y >= hight)
-		y = 0;
-	else if (y < 0)
-		y = hight - 2;
+	switch (setting_wall)
+	{
+	case 0:
+		if (x >= weight - 1)
+			x = 0;
+		else if (x < 0)
+			x = weight - 2;
+		if (y >= hight)
+			y = 0;
+		else if (y < 0)
+			y = hight - 2;
+		break;
+	case 1:
+		if ((x < 0) || (x > weight) || (y < 0) || (y > hight))
+			flag = false;
+		break;
+	}
 	//Логика условий проигрыша.
-	//if ((x < 0) || (x > weight) || (y < 0) || (y > hight))
-	//flag = false;
 	for (int i = 0; i < nTail; i++) //Если есъел свой хвост
 	{
 		if (tailX[i] == x && tailY[i] == y)
