@@ -6,11 +6,18 @@ using namespace std;
 
 void menu(int& choice)
 {
-	system("cls");
-	cout << "=========(Main menu)=========\n";
-	cout << "1. New game.\n";
-	cout << "2. Exit game.\n";
-	cin >> choice;
+	while (true)
+	{
+		system("cls");
+		cout << "=========(Main menu)=========\n";
+		cout << "1. New game.\n";
+		cout << "2. Exit game.\n";
+		cin >> choice;
+		if (choice > 0 && choice < 3)
+		{
+			break;
+		}
+	}
 }
 
 void game() //Функция, которая вызывается, когда пользователь начинает новую игру.

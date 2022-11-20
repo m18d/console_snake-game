@@ -120,7 +120,7 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 	//Логика поедания фрукта, увелиения очков а также длины хвоста.
 	if (x == fx && y == fy)
 	{
-		score++;
+		score = score + 10;
 		fx = rand() % weight;
 		fy = rand() % hight;
 		nTail++;
@@ -131,15 +131,15 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 		tailY = new int[size];
 	}
 	//Логика появления змеи с другой стороны, если она дошла до стенки.
-	if (x >= weight)
+	if (x >= weight - 1)
 		x = 0;
 	else if (x < 0)
-		x = weight - 1;
+		x = weight - 2;
 
 	if (y >= hight)
 		y = 0;
 	else if (y < 0)
-		y = hight - 1;
+		y = hight - 2;
 	//Логика условий проигрыша.
 	//if ((x < 0) || (x > weight) || (y < 0) || (y > hight))
 	//flag = false;
