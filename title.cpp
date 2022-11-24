@@ -1,6 +1,7 @@
 #include <iostream>;
-#include "title.h";
-#include "level.h";	
+#include "title.h"
+#include "level.h"	
+#include "Class.h"
 
 using namespace std;
 
@@ -23,18 +24,22 @@ void menu(int& choice)
 
 void game(int& setting_wall) //Функция, которая вызывается, когда пользователь начинает новую игру.
 {
-	const int weight = 20; //Ширина поля
-	const int hight = 20; //Высота поля
+	object snake, fruit;
+	field poligon;
+	const int wight = 20; //Ширина поля
+	const int height = 20; //Высота поля
+	poligon.SetW(wight);
+	poligon.SetH(height);
 	int x, y, x_fruit, y_fruit, score; // Координаты змеи (x, y), координаты объекта "фрукт" (x_fruit, y_fruit), Счетчик очков, которые набрал пользователь
 	int ntail = 0, size = 1;//Длина звоста, размер массива в котором будут храниться предыдущие координаты головы.
 	int* tailX = new int[size], * tailY = new int[size];//Маасивы в которыз будут координаты x и y головы для последующего роста змеи.
 	bool flag = true;
-	setup(weight, hight, x, y, x_fruit, y_fruit, score); //Вызов функции, которая генерирует первоначальное положение головы змеи, фрукта, а также обнуляет счетчик очков, которое вы набрали в прошлой игре.
+	setup(poligon, snake, fruit, score); //Вызов функции, которая генерирует первоначальное положение головы змеи, фрукта, а также обнуляет счетчик очков, которое вы набрали в прошлой игре.
 	while (flag)
 	{
-		drow(weight, hight, x, y, x_fruit, y_fruit, score, ntail, tailX, tailY); //Функция которая отвечает за отображение поля, персонажа (змеи и ее головы) и фуруктов в поле.
-		input(x, y, flag); //Функция которая отвечает за ввод информации с клавиатуры, а именно в процессе игры за передвижение змейки.
-		logic(weight, hight, x, y, x_fruit, y_fruit, score, flag, ntail, tailX, tailY, size, setting_wall); //Функция в которой происходит вся логика игры.
+		drow(poligon, snake, fruit, score, ntail, tailX, tailY); //Функция которая отвечает за отображение поля, персонажа (змеи и ее головы) и фуруктов в поле.
+		input(flag); //Функция которая отвечает за ввод информации с клавиатуры, а именно в процессе игры за передвижение змейки.
+		logic(poligon, snake, fruit, score, flag, ntail, tailX, tailY, size, setting_wall); //Функция в которой происходит вся логика игры.
 	}
 	delete[] tailX;
 	delete[] tailY;

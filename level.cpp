@@ -1,6 +1,7 @@
 #include<iostream>
 #include<conio.h>
-#include "level.h";
+#include "level.h"
+#include "Class.h"
 
 using namespace std;
 
@@ -10,32 +11,32 @@ eDir dir[2];
 
 
 
-void setup(const int weight, const int hight, int& x, int& y, int& fx, int& fy, int& score)
+void setup(field& poligonFirst, object& snake, object& fruit, int& score)
 {
 	dir[0] = STOP; //Говорим что первоначально с нашей змейкой ничего не просиходит и она стоит на месте, до изменения ее движения.
-	x = weight / 2 - 1; //Превоначальные координаты головы по шириные поля.
-	y = hight / 2 - 1; //Первоначальные кординаты головы по высоте поля.
-	fx = rand() % weight; //Превоначальные координаты фрукта по шириные поля.
-	fy = rand() % hight; //Первоначальные кординаты фрукта по высоте поля.
+	snake.SetX(poligonFirst.GetW() / 2 - 1); //Превоначальные координаты головы по шириные поля.
+	snake.SetY(poligonFirst.GetH() / 2 - 1); //Первоначальные кординаты головы по высоте поля.
+	fruit.SetX(rand() % poligonFirst.GetW()); //Превоначальные координаты фрукта по шириные поля.
+	fruit.SetY(rand() % poligonFirst.GetH()); //Первоначальные кординаты фрукта по высоте поля.
 	score = 0; //Обнуление счетчика очков.
 }
 
-void drow(const int weight, const int hight, const int x, const int y, const int fx, const int fy, const int score, const int nTail, int*& tailX, int*& tailY)
+void drow(field& poligonFirst, object& snake, object& fruit, const int score, const int nTail, int*& tailX, int*& tailY)
 {
 	system("cls");
-	for (int i = 0; i < weight + 1; i++) //Рисуем верхнюю границу.
+	for (int i = 0; i < poligonFirst.GetW() + 1; i++) //Рисуем верхнюю границу.
 		cout << "#";
 	cout << endl;
 
-	for (int i = 0; i < hight; i++) //рисуем все кроме верхней граници и нижней, то есть за отображение головы на поле, фруктов, а также за хвост.
+	for (int i = 0; i < poligonFirst.GetH(); i++) //рисуем все кроме верхней граници и нижней, то есть за отображение головы на поле, фруктов, а также за хвост.
 	{
-		for (int j = 0; j < weight; j++)
+		for (int j = 0; j < poligonFirst.GetW(); j++)
 		{
-			if (j == 0 || j == weight - 1) //Края справа и слева.
+			if (j == 0 || j == poligonFirst.GetW() - 1) //Края справа и слева.
 				cout << "#";
-			if (j == x && i == y) //Голова змеи.
+			if (j == snake.GetX() && i == snake.GetY()) //Голова змеи.
 				cout << "@";
-			else if (i == fy && j == fx) //Фрукт.
+			else if (i == fruit.GetY() && j == fruit.GetX()) //Фрукт.
 				cout << "0";
 			else
 			{
@@ -55,12 +56,12 @@ void drow(const int weight, const int hight, const int x, const int y, const int
 		cout << endl;
 	}
 
-	for (int i = 0; i < weight + 1; i++) //Нижняя гранница поля.
+	for (int i = 0; i < poligonFirst.GetW() + 1; i++) //Нижняя гранница поля.
 		cout << "#";
 	cout << endl << "score \t" << score; //Вывод количества очков.
 }
 
-void input(int& x, int& y, bool& flag)
+void input(bool& flag)
 {
 	if (_kbhit()) //Проверка нажимали ли мы что-то на клавиатуре.
 	{
@@ -89,14 +90,14 @@ void input(int& x, int& y, bool& flag)
 	}
 }
 
-void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, int& score, bool& flag, int& nTail, int*& tailX, int*& tailY, int& size, int& setting_wall)
+void logic(field& poligonFirst, object& snake, object& fruit, int& score, bool& flag, int& nTail, int*& tailX, int*& tailY, int& size, int& setting_wall)
 {
 	//Логика хвоста.
 	int prevX = tailX[0];
 	int prevY = tailY[0];
 	int prev2X, prev2Y;
-	tailX[0] = x;
-	tailY[0] = y;
+	tailX[0] = snake.GetX();
+	tailY[0] = snake.GetY();
 	for (int i = 1; i < nTail; i++)
 	{
 		prev2X = tailX[i];
@@ -111,35 +112,35 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 	{
 	case LEFT:
 		if (dir[1] != RIGHT)
-			x--;
+			snake.SetX(snake.GetX() - 1);
 		else
-			x++;
+			snake.SetX(snake.GetX() + 1);
 		break;
 	case RIGHT:
 		if (dir[1] != LEFT)
-			x++;
+			snake.SetX(snake.GetX() + 1);
 		else
-			x--;
+			snake.SetX(snake.GetX() - 1);
 		break;
 	case UP:
 		if (dir[1] != DOWN)
-			y--;
+			snake.SetY(snake.GetY() - 1);
 		else
-			y++;
+			snake.SetY(snake.GetY() + 1);
 		break;
 	case DOWN:
 		if (dir[1] != UP)
-			y++;
+			snake.SetY(snake.GetY() + 1);
 		else
-			y--;
+			snake.SetY(snake.GetY() - 1);
 		break;
 	}
 	//Логика поедания фрукта, увелиения очков а также длины хвоста.
-	if (x == fx && y == fy)
+	if (snake.GetX() == fruit.GetX() && snake.GetY() == fruit.GetY())
 	{
 		score = score + 10;
-		fx = rand() % weight;
-		fy = rand() % hight;
+		fruit.SetX(rand() % poligonFirst.GetW());
+		fruit.SetY(rand() % poligonFirst.GetH());
 		nTail++;
 		delete[] tailX;
 		delete[] tailY;
@@ -151,24 +152,24 @@ void logic(const int weight, const int hight, int& x, int& y, int& fx, int& fy, 
 	switch (setting_wall)
 	{
 	case 0:
-		if (x >= weight - 1)
-			x = 0;
-		else if (x < 0)
-			x = weight - 2;
-		if (y >= hight)
-			y = 0;
-		else if (y < 0)
-			y = hight - 2;
+		if (snake.GetX() >= poligonFirst.GetW() - 1)
+			snake.SetX(0);
+		else if (snake.GetX() < 0)
+			snake.SetX(poligonFirst.GetW() - 2);
+		if (snake.GetY() >= poligonFirst.GetH())
+			snake.SetX(0);
+		else if (snake.GetY() < 0)
+			snake.SetY(poligonFirst.GetH() - 2);
 		break;
 	case 1:
-		if ((x < 0) || (x > weight) || (y < 0) || (y > hight))
+		if ((snake.GetX() < 0) || (snake.GetX() > poligonFirst.GetW()) || (snake.GetY() < 0) || (snake.GetY() > poligonFirst.GetH()))
 			flag = false;
 		break;
 	}
 	//Логика условий проигрыша.
 	for (int i = 0; i < nTail; i++) //Если есъел свой хвост
 	{
-		if (tailX[i] == x && tailY[i] == y)
+		if (tailX[i] == snake.GetX() && tailY[i] == snake.GetY())
 			flag = false;
 	}
 }
